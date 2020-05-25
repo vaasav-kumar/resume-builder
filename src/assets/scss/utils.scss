@@ -1,0 +1,69 @@
+@import '/themes.scss';
+
+button {
+  outline: none !important;
+  border: none !important;
+  cursor: pointer;
+  background: transparent;
+}
+.default-btn {
+  background: $primary;
+  padding: 10px;
+  color: $white;
+  font-weight: 500;
+  border-radius: 5px;
+  font-size: 16px;
+  margin-top: 10px;
+  min-width: 140px;
+}
+
+.md-field {
+  height: 38px;
+  margin: 15px 0 10px !important;
+  border: 2px solid $grey-outline !important;
+  border-radius: 5px;
+  padding: 0 5px !important;
+  min-height: auto !important;
+
+  label {
+    top: 6px !important;
+    left: 10px !important;
+    color: #808080 !important;
+    font-size: 13px !important;
+  }
+
+  .md-input {
+    border: none !important;
+    font-size: 14px !important;
+    padding: 0 5px !important;
+  }
+
+  &.md-focused, &.md-has-value {
+    border: 2px solid $primary !important;
+
+    label {
+      color: $primary !important;
+      top: -10px !important;
+      left: 8px !important;
+      z-index: 5;
+      background: $white;
+      padding: 0 2px !important;
+      font-size: 13px !important;
+    }
+  }
+
+  .md-textarea {
+    padding: 10px 5px !important;
+  }
+  &.md-has-textarea {
+    height: unset !important;
+
+    &::before, &::after {
+      border-color: transparent !important;
+    }
+  }
+
+  &::before, &::after {
+    background-color: transparent !important;
+  }
+}
