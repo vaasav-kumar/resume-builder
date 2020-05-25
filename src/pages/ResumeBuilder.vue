@@ -1,26 +1,43 @@
 <template>
   <div>
     <router-view />
-    <div v-show="!isPreview">
+
+    <div v-show="$route.name === 'ResumeBuilder'">
+      <h1>RESUME GENERATOR</h1>
+
       <welcome />
+
       <sections v-for="index in sections" :key="index" :secId="index" />
       <div class="toggle">
         <p>Sections</p>
-        <button @click="addSection">+</button>
-        <button @click="reduceSection">-</button>
+        <button @click="addSection">
+          <i class="fas fa-plus-circle" />
+        </button>
+        <button @click="reduceSection">
+          <i class="fas fa-minus-circle" />
+        </button>
       </div>
 
       <projects v-for="index in projects" :key="index" :projId="index" />
       <div class="toggle">
         <p>Projects</p>
-        <button @click="addProject">+</button>
-        <button @click="reduceProject">-</button>
+        <button @click="addProject">
+          <i class="fas fa-plus-circle" />
+        </button>
+        <button @click="reduceProject">
+          <i class="fas fa-minus-circle" />
+        </button>
       </div>
     </div>
 
-    <button class="default-btn" v-if="isPreview" @click="togglePreview">Edit</button>
-    <button class="default-btn" v-else @click="togglePreview">Preview</button>
-    <button class="default-btn" @click="download" style="right: 120px">Download</button>
+    <div class="bottom-btns" v-if="!hideButtons">
+      <button class="default-btn" v-if="$route.name === 'Preview'" @click="editData">Edit</button>
+      <button class="default-btn" v-if="$route.name === 'Templates'" @click="editData">Create Own</button>
+      <button class="default-btn" v-if="$route.name !== 'Preview'" @click="preview">Preview Mine</button>
+
+      <button class="default-btn" v-if="$route.name === 'ResumeBuilder'" @click="viewTemplate">Template</button>
+      <button class="default-btn" v-if="$route.name === 'Preview'" @click="download">Download</button>
+    </div>
   </div>
 </template>
 
@@ -28,6 +45,7 @@
 import Welcome from '../components/Welcome'
 import Sections from '../components/Sections'
 import Projects from '../components/Projects'
+import { mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'ResumeBuilder',
@@ -36,16 +54,22 @@ export default {
     return {
       sections: 1,
       projects: 1,
-      isPreview: false
+      hideButtons: false
     }
   },
+  computed: {
+    ...mapGetters(['getterProjectsList', 'getterSectionsList'])
+  },
   methods: {
+    ...mapMutations(['SET_PROJECTS_LIST', 'SET_SECTIONS_LIST']),
     addSection () {
       this.sections++
     },
     reduceSection () {
       if (this.sections) {
         this.sections--
+        this.getterSectionsList.splice(this.sections, 1)
+        this.SET_SECTIONS_LIST(this.getterSectionsList)
       }
     },
     addProject () {
@@ -54,17 +78,26 @@ export default {
     reduceProject () {
       if (this.projects) {
         this.projects--
+        this.getterProjectsList.splice(this.projects, 1)
+        this.SET_PROJECTS_LIST(this.getterProjectsList)
       }
     },
-    togglePreview () {
-      if (this.isPreview) {
-        this.$router.push({name: 'ResumeBuilder'})
-      } else {
-        this.$router.push({name: 'Preview'})
-      }
-      this.isPreview = !this.isPreview
+    preview () {
+      this.$router.push({name: 'Preview'})
+    },
+    editData () {
+      this.$router.push({name: 'ResumeBuilder'})
+    },
+    viewTemplate () {
+      this.$router.push({name: 'Templates'})
     },
     download () {
+      this.hideButtons = true
+      setTimeout(() => {
+        this.saveFile()
+      })
+    },
+    saveFile () {
       var data = document.documentElement.innerHTML
       var blob = new Blob([data], {type: 'text/html'})
       
@@ -72,6 +105,10 @@ export default {
       a.download = "resume.html";
       a.href = window.URL.createObjectURL(blob);
       a.click()
+
+      setTimeout(() => {
+        this.hideButtons = false
+      })
     }
   }
 }
@@ -80,12 +117,19 @@ export default {
 <style scoped lang="scss">
   @import '../assets/scss/themes.scss';
 
+  h1 {
+    font-size: 25px;
+    text-align: center;
+    font-weight: 700;
+    color: $dark;
+  }
+
   .toggle {
     background: $dark;
     padding: 20px;
     display: flex;
     justify-content: center;
-    margin: 1% 1% 3%;
+    margin: 2% 2% 4%;
     border-radius: 5px;
     box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
 
@@ -96,12 +140,17 @@ export default {
     }
   }
 
-  .default-btn {
-    border-radius: 25px;
-    padding: 10px 25px;
+  .bottom-btns {
     opacity: 0.8;
     position: fixed;
     bottom: 20px;
     right: 10px;
+    display: flex;
+
+    .default-btn {
+      border-radius: 25px;
+      padding: 10px 25px;
+      margin: 0 15px;
+    }
   }
 </style>

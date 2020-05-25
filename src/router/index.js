@@ -15,6 +15,7 @@ let router = new Router({
       component: ResumeBuilder,
       meta: { title: 'Resume Builder' },
       children: [
+        { path: 'templates', name: 'Templates', component: Preview, meta: { title: 'Templates' } },
         { path: 'preview', name: 'Preview', component: Preview, meta: { title: 'Preview' } }
       ]
     }

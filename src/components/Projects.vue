@@ -4,25 +4,30 @@
       <h6>Project {{projId}}</h6>
       <md-field>
         <label>Title</label>
-        <md-input v-model="title" />
+        <md-input v-model="title" :disabled="disableProject" />
       </md-field>
 
       <md-field>
         <label>Description</label>
-        <md-textarea v-model="desc" />
+        <md-textarea v-model="desc" :disabled="disableProject" />
       </md-field>
 
       <md-field>
         <label>URL</label>
-        <md-input v-model="url" />
+        <md-input v-model="url" :disabled="disableProject" />
       </md-field>
 
-      <button class="default-btn">Submit</button>
+      <button class="default-btn" @click="editProject" v-if="disableProject">
+        <i class="fa fa-pencil" />Edit
+      </button>
+      <button class="default-btn" @click="submitProject" v-else>Submit</button>
     </div>
   </div>
 </template>
 
 <script>
+import { mapGetters, mapMutations } from 'vuex'
+
 export default {
   name: 'Projects',
   props: ['projId'],
@@ -30,7 +35,28 @@ export default {
     return {
       title: null,
       desc: null,
-      url: null
+      url: null,
+      disableProject: false
+    }
+  },
+  computed: {
+    ...mapGetters(['getterProjectsList'])
+  },
+  methods: {
+    ...mapMutations(['SET_PROJECTS_LIST']),
+    submitProject () {
+      let params = {
+        title: this.title,
+        desc: this.desc,
+        url: this.url
+      }
+
+      this.getterProjectsList.splice(this.projId - 1, 1, params)
+      this.SET_PROJECTS_LIST(this.getterProjectsList)
+      this.disableProject = true
+    },
+    editProject () {
+      this.disableProject = false
     }
   }
 }
@@ -43,17 +69,12 @@ export default {
     border-radius: 5px;
     box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
     padding: 20px;
-    margin: 1%;
+    margin: 2%;
     background: $bg;
-
-    > div {
-      width: 60%;
-      margin: auto;
-    }
 
     h6 {
       text-align: center;
-      font-size: 18px;
+      font-size: 20px;
       color: #000000;
       margin: 15px;
 
@@ -69,9 +90,16 @@ export default {
     }
 
     .default-btn {
-      display: flex;
-      justify-content: center;
       margin: auto;
+    }
+  }
+
+  .tablet, .desktop {
+    .projects {
+      > div {
+        width: 60%;
+        margin: auto;
+      }
     }
   }
 </style>

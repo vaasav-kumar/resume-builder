@@ -109,9 +109,12 @@ const projects = [
 
 const store = new Vuex.Store({
   state: {
-    welcome: welcome,
-    sections: sections,
-    projects: projects
+    sampleWelcome: welcome,
+    sampleSections: sections,
+    sampleProjects: projects,
+    welcome: {},
+    sections: [],
+    projects: []
   },
   mutations: {
     SET_WELCOME: (state, payload) => {
@@ -125,6 +128,15 @@ const store = new Vuex.Store({
     }
   },
   getters: {
+    getterSampleWelcome: state => {
+      return state.sampleWelcome
+    },
+    getterSampleSectionsList: state => {
+      return state.sampleSections
+    },
+    getterSampleProjectsList: state => {
+      return state.sampleProjects
+    },
     getterWelcome: state => {
       return state.welcome
     },

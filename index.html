@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width ,initial-scale=1.0">
     <script src="./assets/js/observer.js"></script>
     <title>resume-builder</title>
+    <script src="https://kit.fontawesome.com/72bd45ff6b.js" crossorigin="anonymous"></script>
   </head>
 
   <body>
@@ -12,3 +13,35 @@
     <script src="/dist/build.js"></script>
   </body>
 </html>
+
+<script>
+  let appearOnSwipe = new IntersectionObserver((entries, appearOnSwipe) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) {
+        return
+      } else {
+        entry.target.classList.add('swipe')
+        appearOnSwipe.unobserve(entry.target)
+      }
+    })
+  })
+
+  document.querySelectorAll('.title h6, .welcome h6, .welcome p').forEach(item => {
+    appearOnSwipe.observe(item)
+  })
+
+  let appearOnFade = new IntersectionObserver((entries, appearOnFade) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) {
+        return
+      } else {
+        entry.target.classList.add('fader')
+        appearOnFade.unobserve(entry.target)
+      }
+    })
+  })
+
+  document.querySelectorAll('.projects .list > div, .welcome .shape').forEach(item => {
+    appearOnFade.observe(item)
+  })
+</script>

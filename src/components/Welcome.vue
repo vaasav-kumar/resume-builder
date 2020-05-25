@@ -5,20 +5,23 @@
 
       <md-field>
         <label>Upload Image</label>
-        <md-file v-model="imgSrc" accept="image/*" />
+        <md-file v-model="imgSrc" accept="image/*" :disabled="disableIntro" />
       </md-field>
 
       <md-field>
         <label>Title</label>
-        <md-input v-model="title" />
+        <md-input v-model="title" :disabled="disableIntro" />
       </md-field>
 
       <md-field>
         <label>Description</label>
-        <md-textarea v-model="desc" />
+        <md-textarea v-model="desc" :disabled="disableIntro" />
       </md-field>
 
-      <button class="default-btn" @click="submitIntro">Submit</button>
+      <button class="default-btn" @click="editIntro" v-if="disableIntro">
+        <i class="fa fa-pencil" />Edit
+      </button>
+      <button class="default-btn" @click="submitIntro" v-else>Submit</button>
     </div>
   </div>
 </template>
@@ -32,11 +35,9 @@ export default {
       title: null,
       desc: null,
       imgSrc: null,
-      base64: null
+      base64: null,
+      disableIntro: false
     }
-  },
-  created () {
-    console.log('-----rv')
   },
   watch: {
     imgSrc () {
@@ -61,6 +62,10 @@ export default {
       }
 
       this.SET_WELCOME(params)
+      this.disableIntro = true
+    },
+    editIntro () {
+      this.disableIntro = false
     }
   }
 }
@@ -73,17 +78,12 @@ export default {
     padding: 20px;
     box-shadow: $shadow1;
     border-radius: 5px;
-    margin: 1%;
+    margin: 2%;
     background: $bg;
-
-    > div {
-      width: 60%;
-      margin: auto;
-    }
 
     h6 {
       text-align: center;
-      font-size: 18px;
+      font-size: 20px;
       color: #000000;
       margin: 15px;
 
@@ -102,6 +102,15 @@ export default {
       display: flex;
       justify-content: center;
       margin: auto;
+    }
+  }
+
+  .tablet, .desktop {
+    .welcome {
+      > div {
+        width: 60%;
+        margin: auto;
+      }
     }
   }
 </style>

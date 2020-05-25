@@ -5,39 +5,53 @@
       <div>
         <md-field>
           <label>Section Title</label>
-          <md-input v-model="title" />
+          <md-input v-model="title" :disabled="disableSection" />
         </md-field>
         <span class="example">Eg: <i>Education/Skills</i></span>
       </div>
 
       <div>
-        <section-details v-for="index in subSections" :key="index" />
-        <div class="toggle">
+        <section-details v-for="index in subSections" :key="index" :disableSection="disableSection"
+                        :updateVal="updateSectionDetails" :trigger="trigger" />
+        <div class="toggle" :class="{'disabled': disableSection}">
           <p>Section Details</p>
           <div>
-            <button @click="addSectionDetails">+</button>
-            <button @click="reduceSectionDetails">-</button>
+            <button @click="addSectionDetails">
+              <i class="fas fa-plus-circle" />
+            </button>
+            <button @click="reduceSectionDetails">
+              <i class="fas fa-minus-circle" />
+            </button>
           </div>
         </div>
 
-        <percentage-bar v-for="index in percentageBar" :key="index" />
-        <div class="toggle">
+        <percentage-bar v-for="index in percentageBar" :key="index" :disableSection="disableSection"
+                        :updateVal="updatePercent" :trigger="trigger" />
+        <div class="toggle" :class="{'disabled': disableSection}">
           <p>Percentage Bar</p>
           <div>
-            <button @click="addPercentageBar">+</button>
-            <button @click="reducePercentageBar">-</button>
+            <button @click="addPercentageBar">
+              <i class="fas fa-plus-circle" />
+            </button>
+            <button @click="reducePercentageBar">
+              <i class="fas fa-minus-circle" />
+            </button>
           </div>
         </div>
       </div>
     </div>
 
-    <button class="default-btn">Submit</button>
+    <button class="default-btn" @click="editSection" v-if="disableSection">
+      <i class="fa fa-pencil" />Edit
+    </button>
+    <button class="default-btn" @click="submitSection" v-else>Submit</button>
   </div>
 </template>
 
 <script>
 import SectionDetails from './SectionDetails'
 import PercentageBar from './PercentageBar'
+import { mapMutations, mapGetters } from 'vuex'
 
 export default {
   name: 'Sections',
@@ -47,25 +61,75 @@ export default {
     return {
       title: null,
       subSections: 0,
-      percentageBar: 0
+      percentageBar: 0,
+      disableSection: false,
+      trigger: false,
+      updatedBars: [],
+      updatedDetails: []
     }
   },
+  computed: {
+    ...mapGetters(['getterSectionsList'])
+  },
   methods: {
+    ...mapMutations(['SET_SECTIONS_LIST']),
     addSectionDetails () {
-      this.subSections++
+      if (!this.disableSection) {
+        this.subSections++
+      }
     },
     reduceSectionDetails () {
-      if (this.subSections) {
+      if (this.subSections && !this.disableSection) {
+        this.updatedBars = []
+        this.updatedDetails = []
+        this.trigger = !this.trigger
         this.subSections--
       }
     },
     addPercentageBar () {
-      this.percentageBar++
+      if (!this.disableSection) {
+        this.percentageBar++
+      }
     },
     reducePercentageBar () {
-      if (this.percentageBar) {
+      if (this.percentageBar && !this.disableSection) {
+        this.updatedBars = []
+        this.updatedDetails = []
+        this.trigger = !this.trigger
         this.percentageBar--
       }
+    },
+    submitSection () {
+      this.updatedBars = []
+      this.updatedDetails = []
+      this.trigger = !this.trigger
+      this.disableSection = true
+    },
+    updatePercent (newVal) {
+      this.updatedBars.push(newVal)
+      this.save()
+    },
+    updateSectionDetails (newVal) {
+      this.updatedDetails.push(newVal)
+      this.save()
+    },
+    save () {
+      let details = [
+        {
+          bars: this.updatedBars
+        }
+      ]
+      details.push(...this.updatedDetails)
+      let params = {
+        title: this.title,
+        details: details
+      }
+
+      this.getterSectionsList.splice(this.secId - 1, 1, params)
+      this.SET_SECTIONS_LIST(this.getterSectionsList)
+    },
+    editSection () {
+      this.disableSection = false
     }
   }
 }
@@ -75,7 +139,7 @@ export default {
   @import '../assets/scss/themes.scss';
 
   .section-list {
-    margin: 2% 1%;
+    margin: 3% 2%;
     border-radius: 5px;
     box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
     padding: 10px;
@@ -83,7 +147,7 @@ export default {
 
     h6 {
       text-align: center;
-      font-size: 18px;
+      font-size: 20px;
       color: #000000;
       margin: 15px;
 
@@ -99,10 +163,7 @@ export default {
     }
 
     .section {
-      display: flex;
-
       > div {
-        flex: 1;
         padding: 15px 25px;
 
         .example {
@@ -127,13 +188,27 @@ export default {
         > div {
           display: flex;
         }
+
+        &.disabled {
+          background: $dark-grey !important;
+        }
       }
     }
 
     .default-btn {
       margin: 20px auto;
-      display: flex;
-      justify-content: center;
+    }
+  }
+
+  .desktop {
+    .section-list {
+      .section {
+        display: flex;
+
+        > div {
+          flex: 1;
+        }
+      }
     }
   }
 </style>

@@ -6,19 +6,19 @@
       <div class="bg-shape item3"></div>
 
       <div>
-        <div class="shape" v-if="getterWelcome.img">
-          <img :src="getterWelcome.img" />
+        <div class="shape" v-if="welcome.img">
+          <img :src="welcome.img" />
         </div>
       </div>
 
-      <div>
-        <h6>{{getterWelcome.title}}</h6>
-        <p>{{getterWelcome.desc}}</p>
+      <div class="text">
+        <h6>{{welcome.title}}</h6>
+        <p>{{welcome.desc}}</p>
       </div>
     </div>
 
     <div class="sections">
-      <div class="category" v-for="(section, index) in getterSectionsList" :key="index">
+      <div class="category" v-for="(section, index) in sections" :key="index">
         <div class="title">
           <h6>{{section.title}}</h6>
         </div>
@@ -26,7 +26,7 @@
         <div class="value">
           <div class="details" v-for="(details, detailsIndex) in section.details" :key="detailsIndex">
             <h5 v-if="details.heading">{{details.heading}}</h5>
-            <div>
+            <div class="udf">
               <i v-if="details.udf1">{{details.udf1}}</i>
               <i v-if="details.udf2">{{details.udf2}}</i>
               <i v-if="details.udf3">{{details.udf3}}</i>
@@ -45,10 +45,13 @@
     </div>
 
     <div class="projects">
-      <div v-for="(data, index) in getterProjectsList" :key="index">
-        <h6>{{data.title}}</h6>
-        <p>{{data.desc}}</p>
-        <u>{{data.url}}</u>
+      <h5>CONTRIBUTIONS</h5>
+      <div class="list">
+        <div v-for="(data, index) in projects" :key="index">
+          <h6 v-if="data.title">{{data.title}}</h6>
+          <p v-if="data.desc">{{data.desc}}</p>
+          <u v-if="data.url">{{data.url}}</u>
+        </div>
       </div>
     </div>
   </div>
@@ -59,8 +62,68 @@ import { mapGetters } from 'vuex'
 
 export default {
   name: 'Preview',
+  data () {
+    return {
+      welcome: {
+        img: '',
+        title: ''
+      },
+      sections: [],
+      projects: []
+    }
+  },
+  mounted () {
+    let appearOnSwipe = new IntersectionObserver((entries, appearOnSwipe) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) {
+          return
+        } else {
+          entry.target.classList.add('swipe')
+          appearOnSwipe.unobserve(entry.target)
+        }
+      })
+    })
+
+    document.querySelectorAll('.title h6, .welcome h6, .welcome p').forEach(item => {
+      appearOnSwipe.observe(item)
+    })
+
+    let appearOnFade = new IntersectionObserver((entries, appearOnFade) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) {
+          return
+        } else {
+          entry.target.classList.add('fader')
+          appearOnFade.unobserve(entry.target)
+        }
+      })
+    })
+
+    document.querySelectorAll('.projects .list > div, .welcome .shape').forEach(item => {
+      appearOnFade.observe(item)
+    })
+  },
   computed: {
-    ...mapGetters(['getterWelcome', 'getterProjectsList', 'getterSectionsList'])
+    ...mapGetters(['getterWelcome', 'getterProjectsList', 'getterSectionsList', 'getterSampleWelcome', 'getterSampleProjectsList', 'getterSampleSectionsList'])
+  },
+  watch: {
+    '$route': {
+      handler: 'populateData',
+      immediate: true
+    }
+  },
+  methods: {
+    populateData () {
+      if (this.$route.name === 'Preview') {
+        this.welcome = this.getterWelcome
+        this.sections = this.getterSectionsList
+        this.projects = this.getterProjectsList
+      } else {
+        this.welcome = this.getterSampleWelcome
+        this.sections = this.getterSampleSectionsList
+        this.projects = this.getterSampleProjectsList
+      }
+    }
   }
 }
 </script>
@@ -71,8 +134,6 @@ export default {
   .preview {
     .welcome {
       background: linear-gradient(120deg, #000000, #3f3e3e);
-      display: flex;
-      align-items: center;
       padding: 10% 20px;
       position: relative;
 
@@ -144,7 +205,6 @@ export default {
         line-height: 1.3;
         letter-spacing: 1px;
         color: $white;
-        max-width: 80%;
       }
     }
 
@@ -152,7 +212,6 @@ export default {
       margin: 5% 10%;
 
       .category {
-        display: flex;
         border-bottom: 2px solid $grey-outline;
         padding: 20px;
 
@@ -169,7 +228,7 @@ export default {
             font-weight: 600;
             letter-spacing: 1px;
             text-transform: uppercase;
-            margin: 10px;
+            margin: 10px 0;
             display: inline-block;
             border-bottom: 3px solid $primary;
 
@@ -193,6 +252,7 @@ export default {
             color: #000000;
             font-weight: 800;
             margin: 15px 0;
+            line-height: 1.2;
           }
           p {
             font-size: 20px;
@@ -226,7 +286,6 @@ export default {
           }
 
           .bar {
-            width: 80%;
             height: 30px;
             margin-bottom: 20px;
             background: $grey-outline;
@@ -235,6 +294,7 @@ export default {
             > div {
               height: 30px;
               background: $primary;
+              border-radius: 5px;
             }
           }
         }
@@ -244,27 +304,51 @@ export default {
     .projects {
       background: linear-gradient(45deg, #e4e7e7, #dae6e6);
       padding: 5% 10%;
-      display: grid;
-      grid-template-columns: auto auto auto;
-      grid-gap: 15px;
 
-      > div {
-        background: linear-gradient(220deg, $primary, #000000);
-        color: $white;
-        border-radius: 5px;
-        padding: 15px;
+      h5 {
+        font-size: 25px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        margin: 0 0 25px;
+        color: $dark;
+        text-align: center;
+      }
 
-        h6 {
-          font-size: 22px;
-          font-weight: 600;
-          letter-spacing: 1px;
-          margin: 15px;
-        }
-        p {
-          font-size: 16px;
-          font-weight: 500;
-          line-height: 1.2;
-          margin: 10px;
+      .list {
+        margin-top: 20px;
+
+        > div {
+          background: linear-gradient(220deg, $primary, #000000);
+          color: $white;
+          border-radius: 5px;
+          padding: 15px;
+          position: relative;
+          transition: .5s;
+
+          &:hover {
+            transform: scale(1.05, 1.05);
+            transition: 1s;
+          }
+
+          h6 {
+            font-size: 22px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin: 15px 0;
+          }
+          p {
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 1.2;
+            margin: 10px 0;
+          }
+          u {
+            margin: 10px 0;
+            font-size: 15px;
+            font-weight: 500;
+            color: $link;
+            cursor: pointer;
+          }
         }
       }
     }
@@ -304,6 +388,175 @@ export default {
     }
     100% {
       transform: translate(-300px, 270px) rotate(360deg);
+    }
+  }
+
+  .fader {
+    animation: fader 3.5s linear;
+  }
+
+  @keyframes fader {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+
+  @media screen and (max-width: 719px) {
+    .preview {
+      overflow: hidden;
+    }
+
+    .welcome {
+      .bg-shape {
+        height: 120px !important;
+        width: 70px !important;
+        top: 100px !important;
+      }
+      .shape {
+        height: 350px !important;
+        width: 80% !important;
+        max-width: 300px;
+      }
+      .text {
+        padding: 20px;
+        text-align: center;
+
+        h6 {
+          margin-top: 40px;
+          font-size: 30px;
+        }
+        p {
+          font-size: 20px;
+        }
+      }
+    }
+
+    .sections {
+      margin: 5%;
+
+      .category {
+        .title {
+          text-align: center;
+        }
+        h6 {
+          margin: 30px 0;
+          font-size: 18px;
+        }
+        h5 {
+          margin: 20px 0;
+          text-align: center;
+          font-size: 22px !important;
+        }
+        .udf {
+          text-align: center;
+
+          i {
+            margin: 15px 0;
+            font-size: 18px;
+          }
+        }
+        p {
+          font-size: 17px !important;
+        }
+      }
+    }
+
+    .projects {
+      .list {
+        > div {
+          margin: 35px 0;
+
+          h6 {
+            line-height: 1.2;
+            font-size: 20px;
+          }
+          p, u {
+            font-size: 15px;
+          }
+        }
+      }
+    }
+
+    .swipe {
+      animation: swipe 1s linear;
+    }
+
+    @keyframes swipe {
+      0% {
+        opacity: 0;
+        transform: translateY(-40px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  }
+
+  @media screen and (min-width: 720px) {
+    .welcome {
+      display: flex;
+      align-items: center;
+
+      p {
+        max-width: 80%;
+      }
+
+      .swipe {
+        animation: swipe-left 1s linear;
+      }
+    }
+
+    .sections {
+      .category {
+        display: flex;
+
+        .bar {
+          width: 80%;
+        }
+      }
+
+      .swipe {
+        animation: swipe-right 1s linear;
+      }
+    }
+
+    .projects {
+      .list {
+        display: grid;
+        grid-template-columns: auto auto auto;
+        grid-gap: 20px;
+
+        u {
+          position: absolute;
+          bottom: 10px;
+        }
+      }
+    }
+    
+    @keyframes swipe-left {
+      0% {
+        opacity: 0;
+        transform: translateX(40px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+    @keyframes swipe-right {
+      0% {
+        opacity: 0;
+        transform: translateX(-40px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateX(0);
+      }
     }
   }
 </style>
