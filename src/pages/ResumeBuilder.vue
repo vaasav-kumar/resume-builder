@@ -31,6 +31,10 @@
         <i class="fas fa-minus-circle" />
       </button>
     </div>
+
+    <div class="bottom-btns">
+      <button class="default-btn" @click="viewTemplate">Templates</button>
+    </div>
   </div>
 </template>
 
@@ -74,6 +78,9 @@ export default {
         this.getterProjectsList.splice(this.projects, 1)
         this.SET_PROJECTS_LIST(this.getterProjectsList)
       }
+    },
+    viewTemplate () {
+      this.$router.push({name: 'Templates'})
     }
   }
 }
@@ -107,9 +114,22 @@ export default {
       margin-right: 15px;
     }
   }
-
   .toggle:last-child {
     margin-bottom: 60px;
+  }
+
+  .bottom-btns {
+    opacity: 0.8;
+    position: fixed;
+    bottom: 20px;
+    right: 10px;
+    display: flex;
+
+    .default-btn {
+      border-radius: 25px;
+      padding: 10px 25px;
+      margin: 0 15px;
+    }
   }
 
   .fade-enter-active, .fade-leave-active {
