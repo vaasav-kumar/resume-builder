@@ -62,35 +62,55 @@ export default {
   name: 'Template1',
   props: ['welcome', 'sections', 'projects'],
   mounted () {
-    let appearOnSwipe = new IntersectionObserver((entries, appearOnSwipe) => {
-      entries.forEach(entry => {
-        if (!entry.isIntersecting) {
-          return
-        } else {
-          entry.target.classList.add('swipe')
-          appearOnSwipe.unobserve(entry.target)
-        }
+    this.appearTransitions()
+  },
+  watch: {
+    '$route' () {
+      document.querySelectorAll('.title h6, .welcome h6, .welcome p').forEach(item => {
+        item.classList.remove('swipe')
       })
-    })
 
-    document.querySelectorAll('.title h6, .welcome h6, .welcome p').forEach(item => {
-      appearOnSwipe.observe(item)
-    })
-
-    let appearOnFade = new IntersectionObserver((entries, appearOnFade) => {
-      entries.forEach(entry => {
-        if (!entry.isIntersecting) {
-          return
-        } else {
-          entry.target.classList.add('fader')
-          appearOnFade.unobserve(entry.target)
-        }
+      document.querySelectorAll('.projects .list > div, .welcome .shape').forEach(item => {
+        item.classList.remove('fader')
       })
-    })
 
-    document.querySelectorAll('.projects .list > div, .welcome .shape').forEach(item => {
-      appearOnFade.observe(item)
-    })
+      this.appearTransitions()
+    }
+  },
+  methods: {
+    appearTransitions () {
+      setTimeout(() => {
+        let appearOnSwipe = new IntersectionObserver((entries, appearOnSwipe) => {
+          entries.forEach(entry => {
+            if (!entry.isIntersecting) {
+              return
+            } else {
+              entry.target.classList.add('swipe')
+              appearOnSwipe.unobserve(entry.target)
+            }
+          })
+        })
+
+        document.querySelectorAll('.title h6, .welcome h6, .welcome p').forEach(item => {
+          appearOnSwipe.observe(item)
+        })
+
+        let appearOnFade = new IntersectionObserver((entries, appearOnFade) => {
+          entries.forEach(entry => {
+            if (!entry.isIntersecting) {
+              return
+            } else {
+              entry.target.classList.add('fader')
+              appearOnFade.unobserve(entry.target)
+            }
+          })
+        })
+
+        document.querySelectorAll('.projects .list > div, .welcome .shape').forEach(item => {
+          appearOnFade.observe(item)
+        })
+      })
+    }
   }
 }
 </script>

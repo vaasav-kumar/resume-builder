@@ -8,8 +8,11 @@
         <button class="default-btn" v-if="$route.name === 'Preview'" @click="editData">
           <i class="fa fa-pencil" />Edit
         </button>
-        <button class="default-btn" v-if="$route.name !== 'Preview'" @click="preview">
-          <i class="fa fa-search" />Preview Mine
+        <button class="default-btn" v-if="$route.name === 'Templates'" @click="editData">
+          <i class="fa fa-pencil-alt" />Create Own
+        </button>
+        <button class="default-btn" v-if="$route.name === 'Templates'" @click="preview">
+          <i class="fa fa-search" />Preview
         </button>
         <button class="default-btn" v-if="$route.name === 'Preview'" @click="demo">
           <i class="fa fa-search" />Demo
@@ -90,6 +93,14 @@ export default {
       this.hideButtons = true
       this.options = false
 
+      document.querySelectorAll('.title h6, .welcome h6, .welcome p').forEach(item => {
+        item.classList.remove('swipe')
+      })
+
+      document.querySelectorAll('.projects .list > div, .welcome .shape').forEach(item => {
+        item.classList.remove('fader')
+      })
+
       setTimeout(() => {
         this.saveFile()
       })
@@ -105,6 +116,14 @@ export default {
 
       setTimeout(() => {
         this.hideButtons = false
+
+        document.querySelectorAll('.title h6, .welcome h6, .welcome p').forEach(item => {
+          item.classList.add('swipe')
+        })
+
+        document.querySelectorAll('.projects .list > div, .welcome .shape').forEach(item => {
+          item.classList.add('fader')
+        })
       })
     }
   }
@@ -115,7 +134,7 @@ export default {
   @import '../assets/scss/themes.scss';
 
   .bottom-btns {
-    opacity: 0.8;
+    opacity: 0.9;
     position: fixed;
     bottom: 20px;
     right: 10px;
