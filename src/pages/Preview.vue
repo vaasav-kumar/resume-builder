@@ -50,7 +50,7 @@
         <div v-for="(data, index) in projects" :key="index">
           <h6 v-if="data.title">{{data.title}}</h6>
           <p v-if="data.desc">{{data.desc}}</p>
-          <u v-if="data.url">{{data.url}}</u>
+          <u v-if="data.url" target="_blank" :href="data.url">{{data.url}}</u>
         </div>
       </div>
     </div>
