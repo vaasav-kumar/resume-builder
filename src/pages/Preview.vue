@@ -531,9 +531,9 @@ export default {
         grid-template-columns: auto auto auto;
         grid-gap: 20px;
 
-        u {
-          position: absolute;
-          bottom: 10px;
+        > div {
+          min-width: 300px;
+          max-width: 500px;
         }
       }
     }
