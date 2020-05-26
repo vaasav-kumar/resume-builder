@@ -132,8 +132,9 @@ export default {
       })
     },
     downloadPdf () {
+      this.options = false
       let downloadElement = document.getElementById('template')
-      html2canvas(downloadElement, {scale: 2, logging: false, dpi: 800, useCORS: true}).then((canvas) => {
+      html2canvas(downloadElement, {scale: 2, logging: false, dpi: 800, removeContainer: true, useCORS: true}).then((canvas) => {
         let base64image = canvas.toDataURL('image/jpeg', 1)
         let doc = new JsPDF({unit: 'cm', orientation: 'portrait', format: [269.2, 538.5]})
         doc.addImage(base64image, 'PNG', 0, 0, 9.5, 19)

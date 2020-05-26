@@ -37,9 +37,11 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  .percentage-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  @media screen and (min-width: 600px) {
+    .percentage-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
   }
 </style>
