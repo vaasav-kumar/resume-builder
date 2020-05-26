@@ -167,6 +167,7 @@ export default {
         width: 350px;
         transform: skew(-15deg);
         margin: auto;
+        position: relative;
 
         display: flex;
         align-items: center;

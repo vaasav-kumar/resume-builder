@@ -168,6 +168,7 @@ export default {
         height: 450px;
         width: 350px;
         margin: auto;
+        position: relative;
 
         display: flex;
         align-items: center;

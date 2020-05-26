@@ -33,7 +33,17 @@
     </div>
 
     <div class="bottom-btns">
-      <button class="default-btn" @click="viewTemplate">Templates</button>
+      <div v-if="options">
+        <button class="default-btn" @click="viewTemplate">Templates</button>
+        <button class="default-btn" @click="preview">
+          <i class="fa fa-search" />Preview
+        </button>
+      </div>
+
+      <button class="options-btn" @click="options = !options">
+        <i class="fa fa-minus" v-if="options" />
+        <i class="fa fa-plus" v-else />
+      </button>
     </div>
   </div>
 </template>
@@ -51,7 +61,8 @@ export default {
   data () {
     return {
       sections: 1,
-      projects: 1
+      projects: 1,
+      options: false
     }
   },
   computed: {
@@ -81,6 +92,10 @@ export default {
     },
     viewTemplate () {
       this.$router.push({name: 'Templates'})
+    },
+    preview () {
+      this.options = false
+      this.$router.push({name: 'Preview'})
     }
   }
 }
@@ -119,16 +134,38 @@ export default {
   }
 
   .bottom-btns {
-    opacity: 0.8;
+    opacity: 0.9;
     position: fixed;
     bottom: 20px;
     right: 10px;
+
     display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+
+    > div {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-end;
+    }
 
     .default-btn {
       border-radius: 25px;
       padding: 10px 25px;
-      margin: 0 15px;
+      margin: 5px 0;
+    }
+
+    .options-btn {
+      border-radius: 50%;
+      padding: 15px;
+      background: $primary;
+      color: $white;
+      font-size: 18px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 10px;
     }
   }
 
