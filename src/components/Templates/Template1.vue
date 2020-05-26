@@ -1,5 +1,5 @@
 <template>
-  <div class="template1">
+  <div class="template1" id="template">
     <div class="welcome">
       <div class="bg-shape item1"></div>
       <div class="bg-shape item2"></div>

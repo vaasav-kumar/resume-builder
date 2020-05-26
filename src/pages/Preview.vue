@@ -21,7 +21,10 @@
           <i class="fa fa-exchange-alt" />Switch Template
         </button>
         <button class="default-btn" v-if="$route.name === 'Preview'" @click="download">
-          <i class="fa fa-file-code" />Download
+          <i class="fa fa-file-code" />Download HTML
+        </button>
+        <button class="default-btn" v-if="$route.name === 'Preview'" @click="downloadPdf">
+          <i class="fa fa-file-pdf" />Download PDF
         </button>
       </div>
 
@@ -38,6 +41,8 @@ import Template1 from '../components/Templates/Template1'
 import Template2 from '../components/Templates/Template2'
 
 import { mapGetters } from 'vuex'
+import html2canvas from 'html2canvas'
+import JsPDF from 'jspdf'
 
 export default {
   name: 'Preview',
@@ -124,6 +129,15 @@ export default {
         document.querySelectorAll('.projects .list > div, .welcome .shape').forEach(item => {
           item.classList.add('fader')
         })
+      })
+    },
+    downloadPdf () {
+      let downloadElement = document.getElementById('template')
+      html2canvas(downloadElement, {scale: 2, logging: false, dpi: 800, useCORS: true}).then((canvas) => {
+        let base64image = canvas.toDataURL('image/jpeg', 1)
+        let doc = new JsPDF({unit: 'cm', orientation: 'portrait', format: [269.2, 538.5]})
+        doc.addImage(base64image, 'PNG', 0, 0, 9.5, 19)
+        doc.save('resume.pdf')
       })
     }
   }
