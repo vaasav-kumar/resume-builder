@@ -64,10 +64,7 @@ export default {
   name: 'Preview',
   data () {
     return {
-      welcome: {
-        img: '',
-        title: ''
-      },
+      welcome: {},
       sections: [],
       projects: []
     }
@@ -190,6 +187,7 @@ export default {
         img {
           border-radius: 25px;
           transform: skew(15deg);
+          max-width: 90%;
         }
       }
 
@@ -225,12 +223,12 @@ export default {
           h6 {
             font-size: 22px;
             color: #3b3b3b;
-            font-weight: 600;
-            letter-spacing: 1px;
+            font-weight: 500;
             text-transform: uppercase;
-            margin: 10px 0;
+            margin: 15px 0;
             display: inline-block;
             border-bottom: 3px solid $primary;
+            letter-spacing: 1.5px;
 
             &::after {
               content: '';
@@ -250,9 +248,10 @@ export default {
           h5 {
             font-size: 30px;
             color: #000000;
-            font-weight: 800;
+            font-weight: 700;
             margin: 15px 0;
             line-height: 1.2;
+            letter-spacing: 1.5px;
           }
           p {
             font-size: 20px;
@@ -264,16 +263,21 @@ export default {
           i {
             font-size: 18px;
             color: #787a7a;
-            font-weight: 500;
+            font-weight: 400;
 
             &::after {
               content: '';
               margin: 0 10px;
-              height: 5px;
-              width: 5px;
-              border-radius: 50%;
+              height: 15px;
+              width: 2px;
               background: $primary;
               display: inline-block;
+            }
+
+            &:last-child {
+              &::after {
+                content: none;
+              }
             }
           }
           strong {

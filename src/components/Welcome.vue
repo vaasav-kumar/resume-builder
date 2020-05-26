@@ -9,7 +9,7 @@
       </md-field>
 
       <md-field>
-        <label>Title</label>
+        <label>Name</label>
         <md-input v-model="title" :disabled="disableIntro" />
       </md-field>
 
@@ -78,7 +78,7 @@ export default {
     padding: 20px;
     box-shadow: $shadow1;
     border-radius: 5px;
-    margin: 2%;
+    margin: 2% 2% 4%;
     background: $bg;
 
     h6 {
@@ -91,10 +91,10 @@ export default {
         content: '';
         width: 50px;
         height: 5px;
-        background: linear-gradient(299deg, $primary, #11c9cc);;
+        background: linear-gradient(299deg, #2e9e60, #ea6274);
         display: block;
         border-radius: 5px;
-        margin: 5px auto auto;
+        margin: 10px auto auto;
       }
     }
 

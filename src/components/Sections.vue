@@ -11,8 +11,11 @@
       </div>
 
       <div>
-        <section-details v-for="index in subSections" :key="index" :disableSection="disableSection"
-                        :updateVal="updateSectionDetails" :trigger="trigger" />
+        <transition-group name="fade">
+          <section-details v-for="index in subSections" :key="index" :disableSection="disableSection"
+                          :updateVal="updateSectionDetails" :trigger="trigger" />
+        </transition-group>
+
         <div class="toggle" :class="{'disabled': disableSection}">
           <p>Section Details</p>
           <div>
@@ -25,8 +28,11 @@
           </div>
         </div>
 
-        <percentage-bar v-for="index in percentageBar" :key="index" :disableSection="disableSection"
-                        :updateVal="updatePercent" :trigger="trigger" />
+        <transition-group name="fade">
+          <percentage-bar v-for="index in percentageBar" :key="index" :disableSection="disableSection"
+                          :updateVal="updatePercent" :trigger="trigger" />
+        </transition-group>
+
         <div class="toggle" :class="{'disabled': disableSection}">
           <p>Percentage Bar</p>
           <div>
@@ -155,10 +161,10 @@ export default {
         content: '';
         width: 50px;
         height: 5px;
-        background: linear-gradient(299deg, $primary, #11c9cc);;
+        background: linear-gradient(299deg, #2e9e60, #ea6274);
         display: block;
         border-radius: 5px;
-        margin: 5px auto auto;
+        margin: 10px auto auto;
       }
     }
 
@@ -210,5 +216,12 @@ export default {
         }
       }
     }
+  }
+
+  .fade-enter-active, .fade-leave-active {
+    transition: .5s;
+  }
+  .fade-enter, .fade-leave-to {
+    opacity: 0;
   }
 </style>

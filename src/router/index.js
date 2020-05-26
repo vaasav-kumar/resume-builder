@@ -10,15 +10,9 @@ Vue.use(Router)
 let router = new Router({
   mode: 'history',
   routes: [
-    { path: '/',
-      name: 'ResumeBuilder',
-      component: ResumeBuilder,
-      meta: { title: 'Resume Builder' },
-      children: [
-        { path: 'templates', name: 'Templates', component: Preview, meta: { title: 'Templates' } },
-        { path: 'preview', name: 'Preview', component: Preview, meta: { title: 'Preview' } }
-      ]
-    }
+    { path: '/', name: 'ResumeBuilder', component: ResumeBuilder, meta: { title: 'Resume Builder' } },
+    { path: 'templates', name: 'Templates', component: Preview, meta: { title: 'Resume - Templates' } },
+    { path: 'preview', name: 'Preview', component: Preview, meta: { title: 'Resume - Preview' } }
   ]
 })
 
